@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://ca8isl2363r3l"]
+[gd_scene load_steps=35 format=3 uid="uid://ca8isl2363r3l"]
 
 [ext_resource type="Texture2D" uid="uid://b4jkwpkuc7qhr" path="res://Assets/Enemies_Sprites/Pinkslime_Sprites/pinkslime_idle_anim_all_dir_strip_6.png" id="1_a225v"]
 [ext_resource type="Script" path="res://Scripts/Slime/slime.gd" id="1_iwoh4"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://h8qdguk6t5x6" path="res://Assets/Enemies_Sprites/Pinkslime_Sprites/pinkslime_death_anim_all_dir_strip_8.png" id="2_mvupa"]
 [ext_resource type="Texture2D" uid="uid://c0h50urp2iwnf" path="res://Assets/Enemies_Sprites/Pinkslime_Sprites/pinkslime_hit_anim_all_dir_strip_4.png" id="3_netnu"]
 [ext_resource type="Script" path="res://Scripts/Slime/idle_state.gd" id="6_76cor"]
+[ext_resource type="Script" path="res://Scripts/Slime/follow_state.gd" id="7_wvmjk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_upcdw"]
 atlas = ExtResource("2_mvupa")
@@ -201,6 +202,9 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_iw7yx"]
 radius = 7.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_gol6g"]
+radius = 59.3043
+
 [node name="Slime" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 5
@@ -216,11 +220,24 @@ frame_progress = 1.0
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_iw7yx")
 
-[node name="Label" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-
 [node name="IdleState" type="Node" parent="."]
 script = ExtResource("6_76cor")
 
 [node name="FollowState" type="Node" parent="."]
+script = ExtResource("7_wvmjk")
+
+[node name="Aggrobox" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Aggrobox"]
+shape = SubResource("CircleShape2D_gol6g")
+debug_color = Color(0.622011, 0.522704, 0.305145, 0.42)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -21.0
+offset_top = -32.0
+offset_right = 19.0
+offset_bottom = -9.0
+
+[connection signal="body_entered" from="Aggrobox" to="IdleState" method="_on_aggrobox_body_entered"]
+[connection signal="body_exited" from="Aggrobox" to="FollowState" method="_on_aggrobox_body_exited"]

@@ -29,8 +29,6 @@ func _physics_process(delta):
 		exit("AttackState")
 
 func exit(NewState: String):
-
 	if NewState == name:
 		return
-
 	get_parent().switch_state(NewState)
